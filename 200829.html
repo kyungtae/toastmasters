@@ -1,0 +1,711 @@
+<head>
+
+<link rel="shortcut icon" href="./Favicon.ico" type="image/x-icon" />
+<style>
+#contents{width:1000px}
+table{width:1000px;border-spacing:0px;cell-spacing:20px}
+table td{border:1px #aaa solid;}
+td{padding:2px}
+.session{background:#ddf}
+.subsession{background:#eef}
+//.session{background:rgb(177,197,234)}
+.jobTitle{background-color:#eee}
+.head td{font-weight:bold;background-color:#ddd}
+input{margin:0px}
+.g{background-color:#cfc}
+.y{background-color:#ffa}
+.r{background-color:#fcc}
+.title{font-size:30pt}
+.small{font-size:9pt;color:#aaa}
+</style>
+
+
+<script>
+function init2(){
+	var radios = document.getElementsByName("timerOption");
+	console.log(radios);
+	for(radio in radios) {
+		console.log(radio.value);
+		radio.onclick = function() {
+		console.log(radio.value);
+			alert(radio.value);
+		}
+	}
+}
+var isTimerStarted=true;
+var curTime=0;
+var minTime=60;
+var midTime=90;
+var maxTime=120;
+var tid = 0;
+var curSpeaker = 'S1';
+function init(){
+updateRoles();
+}
+var roles = ["ChairPerson","Toastmaster","Timer","AhCounter","Grammarian","TableTopicMaster","GeneralEvaluator"];
+function updateRoles() {
+	for (var i in roles){
+		let name = document.getElementById(roles[i]).innerText;
+		let roleClasses = document.getElementsByClassName(roles[i]);
+			//console.log(name);
+		for (var i in roleClasses){
+			roleClasses[i].innerText = name;
+		}
+	}
+	
+}
+
+function myTimer() {
+	curTime++;
+	if(curTime >= minTime && curTime < midTime){
+		document.body.style.backgroundColor='#0f0';
+	} else if(curTime >= midTime && curTime < maxTime){
+		document.body.style.backgroundColor='yellow';
+	} else if(curTime >= maxTime){
+		document.body.style.backgroundColor='red';
+	}
+	var minText =  (Math.floor(curTime/60)).toString();
+	var secText = (curTime%60).toString();
+	if (minText.length == 1) minText="0"+minText;
+	if (secText.length == 1) secText="0"+secText;
+	document.getElementById('timerText').innerText = minText + ":"+ secText;
+}
+function clearTimer(){
+	if(isTimerStarted){	
+		clearInterval(tid);
+		isTimerStarted=false;
+	}	
+}
+function startTimer(){
+	if(isTimerStarted){
+		clearTimer();
+	} if(curTime>0){
+		setSpeechTime();
+	}
+	isTimerStarted=true;
+	curTime = 0;
+	midTime = (minTime+maxTime)/2;
+	tid = setInterval('myTimer()',1000)
+}
+function toggleTimer(){
+	console.log("toggleTimer");
+	if(isTimerStarted){	
+		clearTimer();
+	}
+	else if(curTime>0){
+		setSpeechTime();
+	} else{
+		startTimer();
+	}
+}
+function setSpeechTime(){
+    var timeText = document.getElementById('timerText').innerText;
+	document.getElementById(curSpeaker).innerText = timeText;
+	if((minTime <=60)&& (curTime < minTime-15 || curTime > maxTime +15)){
+	} else if (curTime < minTime-30 || curTime > maxTime +30){
+			document.getElementById(curSpeaker).className  = 'r';
+	} else{
+		document.getElementById(curSpeaker).className  = 'g';	
+		document.getElementById(curSpeaker).innerText = timeText + '(qualified)';	
+	}
+	document.getElementById('timerText').innerText = "00:00";
+	document.body.style.backgroundColor='white';
+	curTime = 0;
+}
+function startSpeech(v){
+    curSpeaker = v;
+	setTimerOpt(v.charAt(0));
+}
+function setTimerOpt(v){
+	switch(v){
+	case 'S':
+		minTime = 5;//*60;
+		maxTime = 7;//*60;
+		startTimer();
+		break;
+	case 'T':
+		minTime = 1;//*60;
+		maxTime = 2;//*60;
+		startTimer();
+		break;
+	case 'E':
+		minTime = 2;//*60;
+		maxTime = 3;//*60;
+		startTimer();
+		break;
+	case 'G':
+		clearTimer();
+		document.body.style.backgroundColor='#0f0';
+		break;
+	case 'Y':
+		clearTimer();
+		document.body.style.backgroundColor='yellow';
+		break;
+	case 'R':
+		clearTimer();
+		document.body.style.backgroundColor='red';
+		break;
+	case 'C':
+		clearTimer();
+		document.body.style.backgroundColor='white';
+		break;
+	default:
+		break;
+	}
+}
+</script>
+
+
+</head>
+<body onload="init()">
+<div id="contents">
+<center>
+<b style="font-size:12pt;color:#0070C0">499th Meeting, Aug 29th, 2020</b>
+<div class="title"><b><img src='http://www.toastmasters.org//content/images/globals/toastmasters-logo.png' style="width:40px;position:relative;top:5px"> Samsung One Toastmasters</b></div></center>
+<p>
+<table style="color:#aaa">
+<tr>
+<td class="jobTitle">Chairperson</td>
+<td id="ChairPerson" contenteditable>Nare</td>
+<td class="jobTitle">Toastmaster</td>
+<td id="Toastmaster" contenteditable>Kyungtae</td>
+<td class="jobTitle">Timer</td>
+<td id="Timer" contenteditable>???</td>
+<td class="jobTitle">Ah Counter</td>
+<td id="AhCounter" contenteditable>Kwanjin</td>
+</tr>
+<td class="jobTitle">Grammarian</td>
+<td id="Grammarian" contenteditable>Nare</td>
+<td class="jobTitle">Table Topic Master</td>
+<td id="TableTopicMaster" contenteditable>Youngman</td>
+<td class="jobTitle">General Evaluator</td>
+<td id="GeneralEvaluator" contenteditable>Ariel</td>
+<td onClick="updateRoles()"></td>
+<td> </td>
+</tr>
+</table>
+<br>
+<font color="#aaa">
+*Mission Statement: We provide a supportive and positive learning experience in which members are empowered to develop communication and leadership skills, resulting in greater self-confidence and personal growth. 
+</font>
+<br><br>
+<font color="green">
+*Word of the Day : <b>forte</b> (noun)
+<font style="font-size:8pt">
+<br>&nbsp;1. a person's strong suit, or most highly developed characteristic, talent, or skill; something that one excels in:
+<br><i>&nbsp;&nbsp;&nbsp;&nbsp;I don't know what her forte is, but it's not music.</i>
+<br>&nbsp;2. the stronger part of a sword blade, between the middle and the hilt (opposed to foible).
+</font>
+</font>
+<br><br>
+<table>
+<tr class="head">
+<td>Time
+</td>
+<td>Role
+</td>
+<td>Presenter
+</td>
+<td>Event (Title)
+</td>
+<td>Duration
+</td>
+</tr>
+<tr>
+<td>10:00 pm
+</td>
+<td>Chairperson
+</td>
+<td class="Chairperson">Nare
+</td>
+<td>Welcome members and new guests
+<br>
+<span class='small'>Recite Toastmasters Club Mission statement</span>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td>10:05 pm
+</td>
+<td>Toastmaster
+</td>
+<td class="Toastmaster">Kyungtae
+</td>
+<td>Opening remarks
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>Timer
+</td>
+<td class="Timer">
+</td>
+<td onclick="setTimerOpt('C')">Introduce Timer's Role
+</td>
+<td>
+<span class='g' onclick="setTimerOpt('G')">&nbsp;G&nbsp;&nbsp;</span>
+<span class='y' onclick="setTimerOpt('Y')">&nbsp;&nbsp;Y&nbsp;&nbsp;</span>
+<span class='r' onclick="setTimerOpt('R')">&nbsp;&nbsp;R&nbsp;&nbsp;</span>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>AhCounter
+</td>
+<td class="AhCounter">Kwanjin
+</td>
+<td>Introduce Ah-Counter's Role
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>Grammarian
+</td>
+<td class="Grammarian">Nare
+</td>
+<td>Introduce Grammarian's Role
+</td>
+<td>
+</td>
+</tr>
+
+
+<tr class='session'>
+<td>10:10 pm
+</td>
+<td>Toastmaster
+</td>
+<td class="Toastmaster">Kyungtae
+</td>
+<td>Prepared Speech Session
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>1st Speaker
+</td>
+<td>Alvina
+</td>
+<td>Audacious 21
+</td>
+<td>
+<span id='S1' onclick="startSpeech(this.id)">
+<span class='g'>5:00</span>
+<span class='y'>6:00</span>
+<span class='r'>7:00</span>
+</span>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>2nd Speaker
+</td>
+<td>Sunny
+</td>
+<td>What is needed for effective evaulation and feedback
+</td>
+<td>
+<span id='S2' onclick="startSpeech(this.id)">
+<span class='g'>5:00</span>
+<span class='y'>6:00</span>
+<span class='r'>7:00</span>
+</span>
+</td>
+</tr>
+
+
+
+<tr class='small'>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>Timer's Report<br>Vote for the best speaker
+</td>
+<td>
+</td>
+</tr>
+
+
+
+<tr class='session'>
+<td>10:30 pm
+</td>
+<td>TableTopicMaster
+</td>
+<td class="TableTopicMaster">Youngman
+</td>
+<td>Table Topic Session
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>1st
+</td>
+<td contenteditable>
+</td>
+<td contenteditable>
+</td>
+<td>
+<span id='T1' onclick="startSpeech(this.id)">
+<span class='g'>1:00</span>
+<span class='y'>1:30</span>
+<span class='r'>2:00</span>
+</span>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>2nd
+</td>
+<td contenteditable>
+</td>
+<td contenteditable>
+</td>
+<td>
+<span id='T2' onclick="startSpeech(this.id)">
+<span class='g'>1:00</span>
+<span class='y'>1:30</span>
+<span class='r'>2:00</span>
+</span>
+</td>
+</tr>
+
+
+<tr>
+<td>
+</td>
+<td>3rd
+</td>
+<td contenteditable>
+</td>
+<td contenteditable>
+</td>
+</td>
+<td>
+<span id='T3' onclick="startSpeech(this.id)">
+<span class='g'>1:00</span>
+<span class='y'>1:30</span>
+<span class='r'>2:00</span>
+</span>
+</td>
+</tr>
+
+
+<tr>
+<td>
+</td>
+<td>4th
+</td>
+<td contenteditable>
+</td>
+<td contenteditable>
+</td>
+<td>
+<span id='T4' onclick="startSpeech(this.id)">
+<span class='g'>1:00</span>
+<span class='y'>1:30</span>
+<span class='r'>2:00</span>
+</span>
+</td>
+</tr>
+
+
+
+
+<tr class='small'>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>Timer's Report for table topic speaker<br>Vote for the best table topic speaker
+</td>
+<td>
+</td>
+</tr>
+
+
+<tr class='session'>
+<td>10:40 pm
+</td>
+<td>GeneralEvauator
+</td>
+<td class="GeneralEvauator">Ariel
+</td>
+<td>General Evaluation Session
+</td>
+<td>
+</td>
+</tr>
+
+
+<tr>
+<td>
+</td>
+<td>1st Evaluator
+</td>
+<td contenteditable>Manmohan
+</td>
+<td>Project> <a href="https://www.toastmasters.org/-/media/32D2DC93C0D14469AD3378779A2DC4AC.ashx" target="_blank">Dynamic Leadership 3. Connect with storytelling</a>
+</td>
+<td>
+<span id='E1' onclick="startSpeech(this.id)">
+<span class='g'>2:00</span>
+<span class='y'>2:30</span>
+<span class='r'>3:00</span>
+</span>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>2nd Evaluator
+</td>
+<td contenteditable>Simon
+</td>
+<td>Project> <a href="https://www.toastmasters.org/-/media/0B82133F45624042BD1A6D589FCB25FA.ashx" target="_blank">Presentation Mastery 1.2.  Evaulation and Feedback</a>
+</td>
+<td>
+<span id='E2' onclick="startSpeech(this.id)">
+<span class='g'>2:00</span>
+<span class='y'>2:30</span>
+<span class='r'>3:00</span>
+</span>
+</td>
+</tr>
+
+
+<tr class='small'>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>Timer's Report for evaluation<br>Vote for the best evaluator
+</td>
+<td>
+</td>
+</tr>
+
+
+<tr>
+<td>
+</td>
+<td>Grammarian
+</td>
+<td>Nare
+</td>
+<td>Grammarian's Comment
+</td>
+<td>
+<span id='T11' onclick="startSpeech(this.id)">
+<span class='g'>1:00</span>
+<span class='y'>1:30</span>
+<span class='r'>2:00</span>
+</span>
+</td>
+</tr>
+
+
+<td>
+</td>
+<td>AhCounter
+</td>
+<td class="AhCounter">Kwanjin
+</td>
+<td>AhCounter's Report
+</td>
+<td>
+<span id='T12' onclick="startSpeech(this.id)">
+<span class='g'>1:00</span>
+<span class='y'>1:30</span>
+<span class='r'>2:00</span>
+</span>
+</td>
+</tr>
+
+
+<tr>
+<td>
+</td>
+<td>GeneralEvauator
+</td>
+<td>Ariel
+</td>
+<td>General Evauator's comment
+</td>
+<td>
+<span id='E3' onclick="startSpeech(this.id)">
+<span class='g'>2:00</span>
+<span class='y'>2:30</span>
+<span class='r'>3:00</span>
+</span>
+</td>
+</tr>
+
+<tr class='subsession'>
+<td>10:52 pm
+</td>
+<td>Toastmaster
+</td>
+<td>Kyungtae
+</td>
+<td>Announce Best Table Topic, Best Speaker, Best Evaluator
+</td>
+<td>
+</td>
+</tr>
+
+<tr class='subsession'>
+<td>10:55 pm
+</td>
+<td>Chairperson
+</td>
+<td>Nare
+</td>
+<td>Conclusion (& Thank guests)
+<br>
+<span class='small'> Speech Goal vs Current Status / Education comments for guests / Club business & Adjourn meeting</span>
+</td>
+<td>
+</td>
+</tr>
+
+</table>
+</div>
+
+<br><br>
+<hr></hr>
+
+<div class='title'>
+Meeting Roles
+</div>
+<br><br>
+<table>
+<tr><td class="jobTitle">TOASTMASTER</td>
+</tr>
+<tr><td>
+<b>Job:</b> The Toastmaster is the meeting's director and host. A member typically will not be assigned this role   until they are thoroughly familiar with the club and its procedures. As Toastmaster, you:
+<li>Acquire a meeting agenda from your Vice President Education.
+<li>Work with the General Evaluator to ensure all club participants know their roles and responsibilities.
+<li>Introduce speakers during the club meeting, including their speech topic, project title, objectives, delivery time, etc. during your introduction.
+<li>Ensure smooth transitions between speakers during the club meeting.
+</td></tr>
+</table>
+<br><br>
+
+<table>
+<tr><td class="jobTitle">AH COUNTER</td>
+</tr>
+<tr><td>
+<b>Job:</b> The AH COUNTER will make note of any inappropriate words or sounds or pause fillers that distract the audience¡¯s attention from the speaker¡¯s message.  
+<p>
+<b>Whose speech will be accountable? </b>Anyone who speaks during the meeting is accountable.  The AH COUNTER must listen to everyone who speaks during the meeting and record how many ¡°AHs¡± were spoken.
+
+</td></tr>
+</table>
+<br><br>
+
+<table>
+<tr><td class="jobTitle">GRAMMARIAN</td>
+</tr>
+<tr><td>
+<b>Job:</b> The GRAMMARIAN role is truly an exercise in expanding your listening skills.    You have three basic responsibilities: 
+<li>	Comment on the correct use of the English language during the course of the meeting and then provide constructive feedback.    All speakers are subject to the rules of English so please make sure you listen to everyone that is speaking.
+ 
+<li>	Comment on any good usage of the English language. 
+
+<li>	Comment how many times the Word or Phrase of the Day was mentioned during the meeting.
+<p>
+<b>Whose speech will be accountable? </b> Anyone who speaks during the meeting is accountable.  
+</td></tr>
+</table>
+<br><br>
+
+<table>
+<tr><td class="jobTitle">TIMER</td>
+</tr>
+<tr><td>
+<b>Job:</b>The TIMER is the club member that makes sure that all meeting role takers start and finish their duties within a time limit.  Each segment of the meeting is timed and the results given to the club in an oral report.  
+<li>	The time limits for each speaker must be known.
+<li>	Raise the GREEN card when the speaker has spoken for the minimum amount of time. Please keep the card raised and visible. This is the minimum amount of time required to qualify for an award.
+<li>	Raise the YELLOW card and lower the GREEN when the speaker has reached the midpoint of   the presentation. The speaker should start wrapping up the speech. 
+<li>	Raise the RED card and lower the YELLOW card when the speaker has reached the maximum amount of time allowed.
+<li>	Continue to raise the RED card until the speaker finishes.  A grace period of 30 seconds is allowed.
+<li>	Record the speaker¡¯s name and time spoken
+</td></tr>
+</table>
+
+<br><br>
+<table style="color:#aaa">
+<tr>
+<td class="jobTitle">VP of Education</td>
+<td>Ron Lee</td>
+<td class="jobTitle">President </td>
+<td>Nare Ha</td>
+<td class="jobTitle">Sergeant at Arms</td>
+<td>Ron Lee</td>
+<td class="jobTitle">Ah Counter</td>
+<td>Simon Eom</td>
+</tr>
+<td class="jobTitle">VP of Membership</td>
+<td>Ariel Kim</td>
+<td class="jobTitle">Treasurer</td>
+<td>Yong-il Lee</td>
+<td class="jobTitle">VP of PR</td>
+<td>Youngman Park</td>
+<td class="jobTitle">Secretary</td>
+<td>Sunny Ryoo</td>
+</tr>
+</table>
+<center style="width:1000px"><i>Samsung One Toastmasters</i>
+</center>
+<div style="position:fixed;top:0px;right:0px;width:170px;" onclick="toggleTimer()">
+<div style="font-size:50pt" id="timerText">
+00:00
+</div>
+</div>
+
+<!--for debug
+<div style="position:fixed;right:0px;bottom:0px">
+<div style="font-size:10pt;">
+<input type="radio" name="timerOption" value="S" onclick="setTimerOpt(this.value)">S
+<input type="radio" name="timerOption" value="T" onclick="setTimerOpt(this.value)">T
+<input type="radio" name="timerOption" value="E" onclick="setTimerOpt(this.value)">E
+<input type="radio" name="timerOption" value="G" onclick="setTimerOpt(this.value)">G
+<input type="radio" name="timerOption" value="Y" onclick="setTimerOpt(this.value)">Y
+<input type="radio" name="timerOption" value="R" onclick="setTimerOpt(this.value)">R
+<input type="radio" name="timerOption" value="R" onclick="setTimerOpt(this.value)">C
+</div>
+</div>
+--->
+
+</body>
